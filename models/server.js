@@ -67,7 +67,7 @@ class Servidor{
         //Rutas registro, login y logout
         this.app.use('/api/user', require('../routes/user'))
         //rutas de clientes
-        this.app.use('/api/client', require('../routes/client'))
+        this.app.use('/api/booking', require('../routes/booking'))
     }
     listen(){
         this.app.listen(this.port, () =>{
