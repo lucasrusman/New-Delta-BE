@@ -68,6 +68,8 @@ class Servidor{
         this.app.use('/api/user', require('../routes/user'))
         //rutas de clientes
         this.app.use('/api/booking', require('../routes/booking'))
+        //rutas de config
+        this.app.use('/api/config', require('../routes/config'))
     }
     listen(){
         this.app.listen(this.port, () =>{
