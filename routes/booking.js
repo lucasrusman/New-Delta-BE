@@ -18,6 +18,41 @@ router.post('/crear', async (req, res, next) => {
   );
 });
 
+
+
+router.post('/cancelar', async (req, res, next) => {
+  const idReserva = req.body.idReserva;
+  conexion.query(
+    'UPDATE reservas SET estado = 2 WHERE (id = ?);',
+    [idReserva],
+    (error, rows) => {
+      if (error) {
+        console.log(error);
+        res.status(200).json({ status: "fail" })
+      }
+      res.status(200).json({ status: "ok" })
+    }
+  );
+});
+
+router.post('/completar', async (req, res, next) => {
+  const idReserva = req.body.idReserva;
+  conexion.query(
+    'UPDATE reservas SET estado = 3 WHERE (id = ?);',
+    [idReserva],
+    (error, rows) => {
+      if (error) {
+        console.log(error);
+        res.status(200).json({ status: "fail" })
+      }
+      res.status(200).json({ status: "ok" })
+    }
+  );
+});
+
+
+
+
 router.get('', (req, res, next) => {
   conexion.query('SELECT * FROM reservas', (err, rows, fields) => {
     if (!err) {
