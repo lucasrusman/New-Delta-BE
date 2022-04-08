@@ -101,4 +101,20 @@ router.delete('/:id', (req, res) => {
   });
 });
 
+router.post('/asignar/:id', async (req, res, next) => {
+  const {id} = req.params
+  const {auto} = req.body;
+  conexion.query(
+    'UPDATE reservas SET auto = ? WHERE (id = ?);',
+    [auto, id],
+    (error, rows) => {
+      if (error) {
+        console.log(error);
+        res.status(200).json({ status: "fail" })
+      }
+      res.status(200).json({ status: "ok" })
+    }
+  );
+});
+
 module.exports = router;
