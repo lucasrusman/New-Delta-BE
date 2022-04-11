@@ -12,9 +12,8 @@ router.post("/crear", async(req, res, next) => {
   })
 });
 
-router.get("/:id", (req, res, next) => {
-    const { id } = req.params;
-    conexion.query('SELECT * FROM congig WHERE id = ?', [id], (err, rows, fields) => {
+router.get("/", (req, res, next) => {
+    conexion.query('SELECT * FROM config', (err, rows, fields) => {
       if (!err) {
         res.json(rows);
       } else {
@@ -23,10 +22,9 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
+router.put('/', (req, res) => {
   const {precioKm} = req.body;
-  conexion.query('UPDATE config SET precioKm = ? WHERE id = ?', [ precioKm, id],
+  conexion.query('UPDATE config SET precioKm = ?', [precioKm],
     (err, rows, fields) => {
       if (!err) {
         res.json({ Status: 'Config Actualizada' });
