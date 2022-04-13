@@ -5,53 +5,49 @@ const conexion = require('../database');
 const router = express.Router();
 
 router.post('/crear', async (req, res, next) => {
-  const { email, fecha, desde, hasta, distancia, precio, estado, auto } = req.body;
-  conexion.query(
-    'INSERT INTO reservas (email, fecha, desde, hasta, distancia, precio, estado, auto) VALUES (?, ?, ?, ?, ?, ?, ?, ?); ',
-    [email, fecha, desde, hasta, distancia, precio, estado, auto],
-    (error, rows) => {
+  const { email, fecha, desde, hasta, distancia, estado, auto } = req.body;
+  if (distancia) {
+    conexion.query('Select * FROM config', (error, rows) => {
       if (error) {
         console.log(error);
+      } else {
+        precio = distancia * rows[0].precioKm
+        conexion.query(
+          'INSERT INTO reservas (email, fecha, desde, hasta, distancia, precio, estado, auto) VALUES (?, ?, ?, ?, ?, ?, ?, ?); ',
+          [email, fecha, desde, hasta, distancia, precio, estado, auto],
+          (error, rows) => {
+            if (error) {
+              console.log(error);
+            }
+            res.json({ Status: 'Reserva creada' });
+          }
+        );
       }
-      res.json({ Status: 'Reserva creada' });
-    }
-  );
+    });
+  }
 });
-
-
 
 router.post('/cancelar', async (req, res, next) => {
   const idReserva = req.body.idReserva;
-  conexion.query(
-    'UPDATE reservas SET estado = 2 WHERE (id = ?);',
-    [idReserva],
-    (error, rows) => {
-      if (error) {
-        console.log(error);
-        res.status(200).json({ status: "fail" })
-      }
-      res.status(200).json({ status: "ok" })
+  conexion.query('UPDATE reservas SET estado = 2 WHERE (id = ?);', [idReserva], (error, rows) => {
+    if (error) {
+      console.log(error);
+      res.status(200).json({ status: 'fail' });
     }
-  );
+    res.status(200).json({ status: 'ok' });
+  });
 });
 
 router.post('/completar', async (req, res, next) => {
   const idReserva = req.body.idReserva;
-  conexion.query(
-    'UPDATE reservas SET estado = 3 WHERE (id = ?);',
-    [idReserva],
-    (error, rows) => {
-      if (error) {
-        console.log(error);
-        res.status(200).json({ status: "fail" })
-      }
-      res.status(200).json({ status: "ok" })
+  conexion.query('UPDATE reservas SET estado = 3 WHERE (id = ?);', [idReserva], (error, rows) => {
+    if (error) {
+      console.log(error);
+      res.status(200).json({ status: 'fail' });
     }
-  );
+    res.status(200).json({ status: 'ok' });
+  });
 });
-
-
-
 
 router.get('', (req, res, next) => {
   conexion.query('SELECT * FROM reservas', (err, rows, fields) => {
@@ -102,19 +98,15 @@ router.delete('/:id', (req, res) => {
 });
 
 router.post('/asignar/:id', async (req, res, next) => {
-  const {id} = req.params
-  const {auto} = req.body;
-  conexion.query(
-    'UPDATE reservas SET auto = ? WHERE (id = ?);',
-    [auto, id],
-    (error, rows) => {
-      if (error) {
-        console.log(error);
-        res.status(200).json({ status: "fail" })
-      }
-      res.status(200).json({ status: "ok" })
+  const { id } = req.params;
+  const { auto } = req.body;
+  conexion.query('UPDATE reservas SET auto = ? WHERE (id = ?);', [auto, id], (error, rows) => {
+    if (error) {
+      console.log(error);
+      res.status(200).json({ status: 'fail' });
     }
-  );
+    res.status(200).json({ status: 'ok' });
+  });
 });
 
 module.exports = router;
