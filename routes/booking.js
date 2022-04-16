@@ -1,17 +1,17 @@
 const express = require('express');
 
 const conexion = require('../database');
+const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
-
-router.post('/crear', async (req, res, next) => {
+router.post('/crear', [checkAuth], async (req, res, next) => {
   const { email, fecha, desde, hasta, distancia, estado, auto } = req.body;
   if (distancia) {
     conexion.query('Select * FROM config', (error, rows) => {
       if (error) {
         console.log(error);
       } else {
-        precio = distancia * rows[0].precioKm
+        precio = distancia * rows[0].precioKm;
         conexion.query(
           'INSERT INTO reservas (email, fecha, desde, hasta, distancia, precio, estado, auto) VALUES (?, ?, ?, ?, ?, ?, ?, ?); ',
           [email, fecha, desde, hasta, distancia, precio, estado, auto],
@@ -27,7 +27,7 @@ router.post('/crear', async (req, res, next) => {
   }
 });
 
-router.post('/cancelar', async (req, res, next) => {
+router.post('/cancelar', [checkAuth], async (req, res, next) => {
   const idReserva = req.body.idReserva;
   conexion.query('UPDATE reservas SET estado = 2 WHERE (id = ?);', [idReserva], (error, rows) => {
     if (error) {
@@ -38,7 +38,7 @@ router.post('/cancelar', async (req, res, next) => {
   });
 });
 
-router.post('/completar', async (req, res, next) => {
+router.post('/completar', [checkAuth], async (req, res, next) => {
   const idReserva = req.body.idReserva;
   conexion.query('UPDATE reservas SET estado = 3 WHERE (id = ?);', [idReserva], (error, rows) => {
     if (error) {
@@ -49,7 +49,7 @@ router.post('/completar', async (req, res, next) => {
   });
 });
 
-router.get('', (req, res, next) => {
+router.get('', [checkAuth], (req, res, next) => {
   conexion.query('SELECT * FROM reservas', (err, rows, fields) => {
     if (!err) {
       res.json(rows);
@@ -59,7 +59,7 @@ router.get('', (req, res, next) => {
   });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', [checkAuth], (req, res, next) => {
   const { id } = req.params;
   conexion.query('SELECT * FROM reservas WHERE id = ?', [id], (err, rows, fields) => {
     if (!err) {
@@ -70,7 +70,7 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', [checkAuth], (req, res) => {
   const { id } = req.params;
   const { email, fecha, desde, hasta, distancia, precio, estado, auto } = req.body;
   conexion.query(
@@ -86,7 +86,7 @@ router.put('/:id', (req, res) => {
   );
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', [checkAuth], (req, res) => {
   const { id } = req.params;
   conexion.query('DELETE FROM reservas WHERE id = ?', [id], (err, rows, fields) => {
     if (!err) {
