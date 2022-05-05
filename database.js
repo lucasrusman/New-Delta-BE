@@ -1,18 +1,18 @@
 const mysql = require('mysql')
 
-const conexion = mysql.createConnection({
-    host : "localhost",
-    user : "root",
-    password : '',//'1682951!Abmtoba',
-    database : "newdelta",
-    port: 3306
+const conexion = mysql.createPool({
+    host : "us-cdbr-east-05.cleardb.net",
+    user : "b70093c2684c0d",
+    password : 'bc3ee38e',//'1682951!Abmtoba',
+    database : "heroku_39f477a2e268fee",
+    //port: 3306
 })
 
-conexion.connect( (error)=> {
-    if(error){
-        throw error;
-    }
-    console.log('¡Conectado a la base de datos MySQL!')
-})
+// conexion.connect( (error)=> {
+//     if(error){
+//         throw error;
+//     }
+//     console.log('¡Conectado a la base de datos MySQL!')
+// })
 
 module.exports = conexion
