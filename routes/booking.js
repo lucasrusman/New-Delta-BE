@@ -60,6 +60,8 @@ router.get('', (req, res, next) => {
   });
 });
 
+//Este es el endpoint que trae la informacion de la reserva dado un ID
+
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
   conexion.query('SELECT * FROM reservas WHERE id = ?', [id], (err, rows, fields) => {
@@ -70,6 +72,24 @@ router.get('/:id', (req, res, next) => {
     }
   });
 });
+
+
+//Este es el endpoint que devuelve "Nueva" segun si el email tiene una reserva
+
+router.get('/estado', (req, res, next) => {
+  const { email } = req.body;
+  conexion.query('SELECT * FROM reservas WHERE email = ?', [email] ,(err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+
+
+
 
 router.put('/:id', (req, res) => {
   const { id } = req.params;
