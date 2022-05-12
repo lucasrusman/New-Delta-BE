@@ -5,7 +5,7 @@ const conexion = require('../database');
 const router = express.Router();
 
 router.post('/crear', async (req, res, next) => {
-  const { email, fecha, desde, hasta, distancia, auto } = req.body;
+  const { email, fecha, desde, hasta, distancia } = req.body;
   if (distancia) {
     conexion.query('Select * FROM config', (error, rows) => {
       if (error) {
@@ -14,8 +14,8 @@ router.post('/crear', async (req, res, next) => {
         precio = distancia * rows[0].precioKm;
         estado = '1';
         conexion.query(
-          'INSERT INTO reservas (email, fecha, desde, hasta, distancia, precio, estado, auto) VALUES (?, ?, ?, ?, ?, ?, ?, ?); ',
-          [email, fecha, desde, hasta, distancia, precio, estado, auto],
+          'INSERT INTO reservas (email, fecha, desde, hasta, distancia, precio, estado) VALUES (?, ?, ?, ?, ?, ?, ?); ',
+          [email, fecha, desde, hasta, distancia, precio, estado],
           (error, rows) => {
             if (error) {
               console.log(error);
@@ -76,10 +76,14 @@ router.get('/:id', (req, res, next) => {
 
 //Este es el endpoint que devuelve "Nueva" segun si el email tiene una reserva
 
-router.get('/estado', (req, res, next) => {
+router.post('/estado', (req, res, next) => {
   const { email } = req.body;
+  console.log(email);
+  console.log(req.body);
   conexion.query('SELECT * FROM reservas WHERE email = ?', [email] ,(err, rows, fields) => {
     if (!err) {
+      console.log(rows[0]);
+      console.log(rows[0].estado);
       res.json(rows);
     } else {
       console.log(err);
