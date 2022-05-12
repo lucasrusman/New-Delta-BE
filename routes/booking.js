@@ -80,7 +80,11 @@ router.post('/estado', (req, res, next) => {
   const { email } = req.body;
   conexion.query('SELECT * FROM reservas WHERE email = ?', [email] ,(err, rows, fields) => {
     if (!err) {
-      res.json(rows[0].estado);
+      const estado = rows[0].estado
+      if(estado === "1"){
+        res.json({Status : "Nueva"});
+      }
+      res.json({Status : "La reserva posee otro estado"})
     } else {
       console.log(err);
     }
