@@ -78,13 +78,9 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/estado', (req, res, next) => {
   const { email } = req.body;
-  console.log(email);
-  console.log(req.body);
   conexion.query('SELECT * FROM reservas WHERE email = ?', [email] ,(err, rows, fields) => {
     if (!err) {
-      console.log(rows[0]);
-      console.log(rows[0].estado);
-      res.json(rows);
+      res.json(rows[0].estado);
     } else {
       console.log(err);
     }
