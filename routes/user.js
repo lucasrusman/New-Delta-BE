@@ -31,6 +31,7 @@ router.post("/loginPanel",(req, res, next) => {
                        //inicio de sesión OK
                     const email = rows[0].email
                     const password = rows[0].password
+                    const id = rows[0].id
                     // se crea el token
                     const token = jwt.sign(
                       { email, password},
@@ -39,6 +40,7 @@ router.post("/loginPanel",(req, res, next) => {
                     );
                     res.status(200).json({
                       token,
+                      id,
                       expiresIn: 3600,
                       Status : "Login correcto"
                     });
