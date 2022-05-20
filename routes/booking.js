@@ -82,9 +82,9 @@ router.post('/estado', (req, res, next) => {
     if (!err) {
       const estado = rows[0].estado
       if(estado === "1"){
-        res.json({Status : "Nueva"});
+        res.json({Status : "El usuario posee una reserva ya en curso", Code: 1});
       }
-      res.json({Status : "La reserva posee otro estado"})
+      res.json({Status : "El usuario NO posee reservas en curso.", Code: 2})
     } else {
       console.log(err);
     }
