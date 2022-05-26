@@ -87,6 +87,8 @@ router.post('/estado', (req, res, next) => {
         }else{
           res.json({Status : "El usuario NO posee reservas en curso.", Code: 2})
         }
+      }else{
+        res.json({Status : "El usuario NO posee reservas en curso.", Code: 2})
       }
       
     } else {
