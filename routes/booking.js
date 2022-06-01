@@ -81,15 +81,17 @@ router.post('/estado', (req, res, next) => {
   conexion.query('SELECT * FROM reservas WHERE email = ?', [email] ,(err, rows, fields) => {
     if (!err) {
       if(rows.length > 0){
-        const estado = rows[0].estado
+        const estado = rows[rows.length-1].estado
         if(estado === "1"){
-          res.json({Status : "El usuario posee una reserva ya en curso", Code: 1, Desde: rows[0].desde, Hasta: rows[0].hasta});
+          res.json({Status : "El usuario posee una reserva ya en curso", Code: 1, Desde: rows[rows.length-1].desde, Hasta: rows[rows.length-1].hasta});
         }else{
           res.json({Status : "El usuario NO posee reservas en curso.", Code: 2})
         }
+      }else{
+        res.json({Status : "El usuario NO posee reservas en curso.", Code: 2})
       }
     } else {
-      console.log(err);
+      res.json({Status : "El usuario NO posee reservas en curso.", Code: 2})
     }
   });
 });
