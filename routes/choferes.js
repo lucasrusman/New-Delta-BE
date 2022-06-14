@@ -17,45 +17,6 @@ router.post("/signup", async(req, res, next) => {
 });
 
 
-router.post("/loginChoferes",(req, res, next) => {
-  try {
-    const {patente, password} = req.body
-        //si no te manda email o pass
-        if(!patente || !password){
-            res.json({Status : "Ingrese la patente y/o password"})
-        }else{
-            conexion.query('SELECT * FROM choferes WHERE patente = ?', [patente], async(error, rows)=>{
-                if( rows.length == 0 || !(await bcryptjs.compare(password, rows[0].password)) || rows[0].rol !== 3 ){
-                    res.json({Status : "Email/Password/Rol incorrectos"})
-                }else{
-                       //inicio de sesión OK
-                    const patente = rows[0].patente
-                    const password = rows[0].password
-                    const id = rows[0].id
-                    // se crea el token
-                    const token = jwt.sign(
-                      { patente, password},
-                      "secret_this_should_be_longer",
-                      { expiresIn: "1h" }
-                    );
-                    res.status(200).json({
-                      token,
-                      id,
-                      expiresIn: 3600,
-                      Status : "Login correcto"
-                    });
-            }
-        })
-        }
-  } catch (error) {
-      return res.status(401).json({
-        message: "Auth failed"
-      });
-  }
-});
-
-
-
 //NO FUNCIONA LOGOUT
 router.post('/logout', (req, res, next) =>{
   localStorage.removeItem('token')
@@ -81,5 +42,47 @@ router.get('', (req, res, next) => {
   });
 });
 
+
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  conexion.query('SELECT * FROM choferes WHERE id = ?', [id], (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { patente, password} = req.body;
+  const passHash = await bcryptjs.hash(password, 10);
+  const rol = 3
+  conexion.query(
+    'UPDATE choferes SET patente = ?, password= ? , rol = ? WHERE id = ?',
+    [patente, passHash,rol, id],
+    (err, rows, fields) => {
+      if (!err) {
+        res.json({ Status: 'Chofer Actualizado' });
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  conexion.query('DELETE FROM choferes WHERE id = ?', [id], (err, rows, fields) => {
+    if (!err) {
+      res.json({ Status: 'Chofer eliminado' });
+    } else {
+      console.log(err);
+    }
+  });
+});
 
 module.exports = router;
