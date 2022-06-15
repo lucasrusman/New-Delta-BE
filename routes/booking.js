@@ -38,10 +38,10 @@ router.post('/cancelar', async (req, res, next) => {
     res.status(200).json({ status: 'ok' });
   });
 });
-
+//este metodo completa y asigna
 router.post('/completar', async (req, res, next) => {
-  const idReserva = req.body.idReserva;
-  conexion.query('UPDATE reservas SET estado = 3 WHERE (id = ?);', [idReserva], (error, rows) => {
+  const {patente, idReserva} = req.body;
+  conexion.query('UPDATE reservas SET estado = 3, auto = ? WHERE (id = ?);', [patente, idReserva], (error, rows) => {
     if (error) {
       console.log(error);
       res.status(200).json({ status: 'fail' });
@@ -137,7 +137,7 @@ router.delete('/:id', (req, res) => {
     }
   });
 });
-
+//este metodo va a quedar para asignar manualmente un auto desde el panel
 router.post('/asignar/:id', async (req, res, next) => {
   const { id } = req.params;
   const { auto } = req.body;
@@ -147,6 +147,17 @@ router.post('/asignar/:id', async (req, res, next) => {
       res.status(200).json({ status: 'fail' });
     }
     res.status(200).json({ status: 'ok' });
+  });
+});
+
+
+router.post('/activas', (req, res, next) => {
+  conexion.query('SELECT * FROM reservas WHERE estado = 1 ORDER BY id ASC', (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
   });
 });
 

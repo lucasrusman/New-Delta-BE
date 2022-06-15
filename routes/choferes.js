@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/signup", async(req, res, next) => {
   const {patente, password} = req.body
   const passHash = await bcryptjs.hash(password, 10)
-  const rol = 3
+  const rol = '3'
   conexion.query('INSERT INTO choferes (patente, password, rol) VALUES (?, ?, ?); ', [patente, passHash, rol], (error, rows)=>{
     if(error){console.log(error)}
     res.json({Status : "Chofer registrado"})
@@ -59,7 +59,7 @@ router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { patente, password} = req.body;
   const passHash = await bcryptjs.hash(password, 10);
-  const rol = 3
+  const rol = '3'
   conexion.query(
     'UPDATE choferes SET patente = ?, password= ? , rol = ? WHERE id = ?',
     [patente, passHash,rol, id],
