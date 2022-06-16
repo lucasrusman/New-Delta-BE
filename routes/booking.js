@@ -40,11 +40,10 @@ router.post('/cancelar', async (req, res, next) => {
 });
 //este metodo completa y asigna
 router.post('/completar', async (req, res, next) => {
-  const {patente, idReserva} = req.body;
-  conexion.query('UPDATE reservas SET estado = 3, auto = ? WHERE (id = ?);', [patente, idReserva], (error, rows) => {
+  const { patente, idReserva } = req.body;
+  conexion.query('UPDATE reservas SET estado = 3 WHERE (auto= ? and id = ?);', [patente, idReserva], (error, rows) => {
     if (error) {
       console.log(error);
-      res.status(200).json({ status: 'fail' });
     }
     res.status(200).json({ status: 'ok' });
   });
