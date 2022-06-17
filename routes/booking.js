@@ -74,7 +74,6 @@ router.get('/:id', (req, res, next) => {
 
 
 //Este es el endpoint que devuelve "Nueva" segun si el email tiene una reserva
-
 router.post('/estado', (req, res, next) => {
   const { email } = req.body;
   conexion.query('SELECT * FROM reservas WHERE email = ?', [email] ,(err, rows, fields) => {
