@@ -40,9 +40,7 @@ router.post('/cancelar', async (req, res, next) => {
 });
 //este metodo completa y asigna
 router.post('/completar/:id', async (req, res, next) => {
-  console.log(req.params);
-  console.log(req.params.id);
-  const {id}= req.params
+  const {id} = req.params
   conexion.query('UPDATE reservas SET estado = 3 WHERE id = ?;', [id], (error, rows) => {
     if (error) {
       console.log(error);
