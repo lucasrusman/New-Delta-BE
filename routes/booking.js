@@ -152,7 +152,7 @@ router.post('/asignar/:id', async (req, res, next) => {
 
 
 router.post('/activas', (req, res, next) => {
-  conexion.query('SELECT * FROM reservas WHERE estado = 1 AND auto is null ORDER BY id ASC', (err, rows, fields) => {
+  conexion.query('SELECT * FROM reservas WHERE estado = 1 AND auto is null ORDER BY id DESC', (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
